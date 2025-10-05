@@ -92,7 +92,7 @@ public class PasswordValidationTests extends BaseTest {
         assertValidationMessage("Expected warning for digits-only password", page);
     }
 
-    // ✅ 6) Valid password
+    //  6) Valid password
     @Test
     public void testValidPassword() {
         RegistrationPage page = new RegistrationPage()
