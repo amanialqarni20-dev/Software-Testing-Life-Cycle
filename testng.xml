@@ -9,8 +9,8 @@
 
     <test name="Registration Tests">
         <classes>
-            <class name="tests.WeakPasswordTest"/>
-            <class name="tests.InvalidEmailTest"/>
+            <class name="tests.teststry.WeakPasswordTest"/>
+            <class name="tests.teststry.InvalidEmailTest"/>
 
         </classes>
 

@@ -1,7 +1,10 @@
 package pages;
 
+import Utils.Driver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 public class RegistrationPage extends BasePage {
 
@@ -9,29 +12,33 @@ public class RegistrationPage extends BasePage {
     private final By ssnBy = By.xpath("//*[@id='ssn']");
     private final By firstNameBy = By.xpath("//*[@id='firstName']");
     private final By lastNameBy = By.xpath("//*[@id='lastName']");
-    private final By jobTesterBy = By.xpath("//*[@id='job']/option[1]");
-    private final By jobDeveloperBy = By.xpath("//*[@id='job']/option[2]");
+
+    //  Locators للجندر (input + label)
+    private final By maleGenderInputBy   = By.id("male");
+    private final By femaleGenderInputBy = By.id("female");
+    private final By otherGenderInputBy  = By.id("other");
+
+    private final By maleGenderLabelBy   = By.cssSelector("label[for='male']");
+    private final By femaleGenderLabelBy = By.cssSelector("label[for='female']");
+    private final By otherGenderLabelBy  = By.cssSelector("label[for='other']");
+
+    private final By jobBy = By.xpath("//*[@id='job']");
     private final By cvUploadBy = By.xpath("//*[@id='cv']");
     private final By usernameBy = By.xpath("//*[@id='username']");
     private final By emailBy = By.xpath("//*[@id='email']");
     private final By passwordBy = By.xpath("//*[@id='password']");
     private final By registerButtonBy = By.xpath("//*[@id='registrationForm']/button");
+    private final By formContainerBy = By.id("registrationForm");
 
     // ===== Fluent Methods =====
     public RegistrationPage enterSSN(String ssn) {
         safeSendKeys(safeFindElement(ssnBy), ssn);
         return this;
     }
-    public WebElement getFirstNameField() {
-        return getDriver().findElement(By.id("firstName")); // غيّري الـ id إذا مختلف عندك
-    }
 
     public RegistrationPage enterFirstName(String firstName) {
         safeSendKeys(safeFindElement(firstNameBy), firstName);
         return this;
-    }
-    public WebElement getPasswordField() {
-        return safeFindElement(passwordBy);
     }
 
     public RegistrationPage enterLastName(String lastName) {
@@ -39,11 +46,28 @@ public class RegistrationPage extends BasePage {
         return this;
     }
 
+    // ✅ تعديل الضغط على الـ Label بدل الـ Input
+    public RegistrationPage selectMaleGender() {
+        jsClick(Driver.getDriver().findElement(maleGenderLabelBy));
+        return this;
+    }
+
+    public RegistrationPage selectFemaleGender() {
+        jsClick(Driver.getDriver().findElement(femaleGenderLabelBy));
+        return this;
+    }
+
+    public RegistrationPage selectOtherGender() {
+        jsClick(Driver.getDriver().findElement(otherGenderLabelBy));
+        return this;
+    }
+
     public RegistrationPage selectJob(String jobTitle) {
-        if (jobTitle.equalsIgnoreCase("Tester")) {
-            safeClick(safeFindElement(jobTesterBy));
-        } else {
-            safeClick(safeFindElement(jobDeveloperBy));
+        WebElement jobElement = safeFindElement(jobBy);
+        try {
+            new Select(jobElement).selectByVisibleText(jobTitle);
+        } catch (Exception e) {
+            safeSendKeys(jobElement, jobTitle);
         }
         return this;
     }
@@ -73,22 +97,44 @@ public class RegistrationPage extends BasePage {
         return this;
     }
 
-    // Optional: للتحقق من ظهور alert
-    public RegistrationPage assertFormSubmitted() {
-        try {
-            String alertText = getDriver().switchTo().alert().getText();
-            if (!alertText.equals("Form submitted!")) {
-                throw new AssertionError("Expected 'Form submitted!' but got: " + alertText);
-            }
-            getDriver().switchTo().alert().accept();
-        } catch (Exception e) {
-            throw new AssertionError("No alert was displayed after clicking Register!");
-        }
-        return this;
+    // ✅ أداة الضغط بـ JavaScript
+    private void jsClick(WebElement element) {
+        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
+        js.executeScript("arguments[0].click();", element);
     }
 
-    // Getter اختياري لو بتشيكي رسائل الخطأ
-    public WebElement getEmailField() {
-        return safeFindElement(emailBy);
-    }
+    // ===== Getters =====
+    public WebElement getSSNField() { return Driver.getDriver().findElement(ssnBy); }
+
+    public WebElement getFirstNameField() { return Driver.getDriver().findElement(firstNameBy); }
+
+    public WebElement getLastNameField() { return Driver.getDriver().findElement(lastNameBy); }
+
+    public WebElement getMaleGenderOption() { return Driver.getDriver().findElement(maleGenderInputBy); }
+
+    public WebElement getFemaleGenderOption() { return Driver.getDriver().findElement(femaleGenderInputBy); }
+
+    public WebElement getOtherGenderOption() { return Driver.getDriver().findElement(otherGenderInputBy); }
+
+    // ✅ Getters للـ Labels (للتست المرئي)
+    public WebElement getMaleGenderLabel() { return Driver.getDriver().findElement(maleGenderLabelBy); }
+
+    public WebElement getFemaleGenderLabel() { return Driver.getDriver().findElement(femaleGenderLabelBy); }
+
+    public WebElement getOtherGenderLabel() { return Driver.getDriver().findElement(otherGenderLabelBy); }
+
+    public WebElement getJobField() { return Driver.getDriver().findElement(jobBy); }
+
+    public WebElement getCVUploadField() { return Driver.getDriver().findElement(cvUploadBy); }
+
+    public WebElement getUsernameField() { return Driver.getDriver().findElement(usernameBy); }
+
+    public WebElement getEmailField() { return Driver.getDriver().findElement(emailBy); }
+
+    public WebElement getPasswordField() { return Driver.getDriver().findElement(passwordBy); }
+
+    public WebElement getRegisterButton() { return Driver.getDriver().findElement(registerButtonBy); }
+
+    public WebElement getFormContainer() { return Driver.getDriver().findElement(formContainerBy); }
+
 }

@@ -1,0 +1,1 @@
+{"uuid":"dba0a359-000d-4409-90c8-3c4afcc28688","name":"tests.JobAndCVTests.openPage","children":["5680f614-7435-4d38-935b-e2e9578cf370"],"description":"","befores":[{"name":"openPage","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1759714126095,"stop":1759714126115}],"afters":[],"start":1759714126095,"stop":1759714126115}
